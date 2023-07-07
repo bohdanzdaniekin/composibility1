@@ -5,16 +5,13 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
-import com.mr.nemo.composibility.ui.theme.color.ComposibilityColorScheme
 import com.mr.nemo.composibility.ui.theme.color.composibilityColorScheme
 import com.mr.nemo.composibility.ui.theme.shape.ComposibilityShapes
-import com.mr.nemo.composibility.ui.theme.typography.ComposibilityTypography
 import com.mr.nemo.composibility.ui.theme.typography.Typography
 
 private val ColorScheme = composibilityColorScheme()
@@ -43,17 +40,3 @@ fun ComposibilityTheme(
     )
 }
 
-object ComposibilityTheme {
-    val colors: ComposibilityColorScheme
-        @Composable
-        @ReadOnlyComposable
-        get() = LocalComposibilityColorScheme.current
-    val typography: ComposibilityTypography
-        @Composable
-        @ReadOnlyComposable
-        get() = LocalComposibilityTypography.current
-    val shapes: ComposibilityShapes
-        @Composable
-        @ReadOnlyComposable
-        get() = LocalComposibilityShapes.current
-}
