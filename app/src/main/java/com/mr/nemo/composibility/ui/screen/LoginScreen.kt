@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
@@ -34,6 +35,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mr.nemo.composibility.R
@@ -46,7 +49,8 @@ import com.mr.nemo.composibility.ui.theme.ComposibilityTheme
 
 @Composable
 fun LoginScreen(
-    onSignUpClick: () -> Unit
+    onSignUpClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var email by rememberSaveable {
         mutableStateOf("")
@@ -59,7 +63,8 @@ fun LoginScreen(
         onEmailValueChange = { value -> email = value },
         password = password,
         onPasswordValueChange = { value -> password = value },
-        onSignUpClick = { onSignUpClick() }
+        onSignUpClick = { onSignUpClick() },
+        modifier = modifier
     )
 }
 
@@ -69,8 +74,8 @@ fun LoginScreen(
     onEmailValueChange: (String) -> Unit,
     password: String,
     onPasswordValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    onSignUpClick: (Int) -> Unit
+    onSignUpClick: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
@@ -92,7 +97,8 @@ fun LoginScreen(
                 painter = painterResource(id = R.drawable.bg_login_page),
                 contentDescription = null,
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .weight(1f),
                 alignment = Alignment.Center,
                 contentScale = ContentScale.Crop
             )
@@ -112,7 +118,11 @@ fun LoginScreen(
                     onValueChange = onEmailValueChange,
                     modifier = Modifier.fillMaxWidth(),
                     textStyle = ComposibilityTheme.typography.bodyM,
-                    placeholder = stringResource(R.string.email_address)
+                    placeholder = stringResource(R.string.email_address),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Next
+                    ),
                 )
 
                 Spacer(Modifier.height(16.dp))

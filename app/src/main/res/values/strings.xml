@@ -8,4 +8,5 @@
     <string name="register_now">Register now</string>
     <string name="or_continue_with">Or continue with</string>
     <string name="hint_password">Password</string>
+    <string name="button_continue">Continue</string>
 </resources>

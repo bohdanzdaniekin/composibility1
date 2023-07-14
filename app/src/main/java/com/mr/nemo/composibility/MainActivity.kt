@@ -27,7 +27,11 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable(route = Route.SignUp.screenName) {
-                        SignUpScreen()
+                        SignUpScreen(
+                            onBackClicked = {
+                                navController.navigateUp()
+                            }
+                        )
                     }
                 }
             }

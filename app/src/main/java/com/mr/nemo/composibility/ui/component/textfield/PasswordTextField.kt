@@ -28,7 +28,10 @@ fun PasswordTextField(
     password: String,
     onPasswordValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    placeholder: String = stringResource(R.string.hint_password)
+    placeholder: String = stringResource(R.string.hint_password),
+    keyboardOptions: KeyboardOptions = KeyboardOptions(
+        keyboardType = KeyboardType.Password
+    )
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
     val passwordIcon = if (isPasswordVisible) {
@@ -59,7 +62,7 @@ fun PasswordTextField(
         } else {
             PasswordVisualTransformation()
         },
-        keyboardOptions = KeyboardOptions(
+        keyboardOptions = keyboardOptions.copy(
             keyboardType = KeyboardType.Password
         ),
         placeholder = placeholder,
