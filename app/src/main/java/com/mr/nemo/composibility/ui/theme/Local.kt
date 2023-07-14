@@ -31,6 +31,8 @@ val LocalComposibilityColorScheme = staticCompositionLocalOf { composibilityColo
 
 val LocalComposibilityShapes = staticCompositionLocalOf {
     ComposibilityShapes(
-        default = RoundedCornerShape(ZeroCornerSize)
+        default = RoundedCornerShape(ZeroCornerSize),
+        round = RoundedCornerShape(50),
+        checkbox = RoundedCornerShape(ZeroCornerSize)
     )
 }

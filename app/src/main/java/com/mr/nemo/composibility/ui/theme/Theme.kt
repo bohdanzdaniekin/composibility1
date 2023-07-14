@@ -23,6 +23,8 @@ fun ComposibilityTheme(
 ) {
     val shapes = ComposibilityShapes(
         default = RoundedCornerShape(size = 12.dp),
+        round = RoundedCornerShape(percent = 50),
+        checkbox = RoundedCornerShape(4.dp)
     )
     val view = LocalView.current
     if (!view.isInEditMode) {

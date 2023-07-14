@@ -5,5 +5,7 @@ import androidx.compose.ui.graphics.Shape
 
 @Immutable
 data class ComposibilityShapes(
-    val default: Shape
+    val default: Shape,
+    val round: Shape,
+    val checkbox: Shape
 )
