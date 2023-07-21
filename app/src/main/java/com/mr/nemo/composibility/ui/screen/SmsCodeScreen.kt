@@ -4,18 +4,28 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mr.nemo.composibility.R
+import com.mr.nemo.composibility.ui.component.SmsCode
+import com.mr.nemo.composibility.ui.component.state.rememberSmsCodeState
 import com.mr.nemo.composibility.ui.component.text.TitleText
 import com.mr.nemo.composibility.ui.theme.ComposibilityTheme
 
@@ -37,6 +47,7 @@ fun SmsCodeScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
+                var smsCode by rememberSmsCodeState()
                 TitleText(
                     text = "Enter confirmation code",
                     style = typography.heading3.copy(
@@ -56,9 +67,42 @@ fun SmsCodeScreen() {
 
                 Spacer(modifier = Modifier.height(40.dp))
 
-
+                SmsCode(
+                    state = smsCode,
+                    onStateChanged = { state -> smsCode = state }
+                )
             }
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(horizontal = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Bottom
+            ) {
+                TitleText(
+                    text = "Resend code",
+                    style = typography.actionM.copy(
+                        color = colors.highlightDarkest
+                    )
+                )
 
+                Spacer(modifier = Modifier.height(24.dp))
+
+                TextButton(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = ComposibilityTheme.colors.highlightDarkest
+                    ),
+                    onClick = { /*TODO*/ },
+                    shape = ComposibilityTheme.shapes.default,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .requiredHeight(48.dp)
+                ) {
+                    Text(text = stringResource(R.string.button_continue))
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
         }
     }
 }

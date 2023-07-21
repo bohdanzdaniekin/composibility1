@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.mr.nemo.composibility.ui.navigation.Route
 import com.mr.nemo.composibility.ui.screen.LoginScreen
 import com.mr.nemo.composibility.ui.screen.SignUpScreen
+import com.mr.nemo.composibility.ui.screen.SmsCodeScreen
 import com.mr.nemo.composibility.ui.theme.ComposibilityTheme
 
 class MainActivity : ComponentActivity() {
@@ -30,8 +31,14 @@ class MainActivity : ComponentActivity() {
                         SignUpScreen(
                             onBackClicked = {
                                 navController.navigateUp()
+                            },
+                            onContinueClicked = {
+                                navController.navigate(Route.SmsCode.screenName)
                             }
                         )
+                    }
+                    composable(route = Route.SmsCode.screenName) {
+                        SmsCodeScreen()
                     }
                 }
             }

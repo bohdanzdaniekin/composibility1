@@ -49,7 +49,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun SignUpScreen(
     modifier: Modifier = Modifier,
-    onBackClicked: () -> Unit
+    onBackClicked: () -> Unit,
+    onContinueClicked: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -199,7 +200,7 @@ fun SignUpScreen(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = ComposibilityTheme.colors.highlightDarkest
                         ),
-                        onClick = { /*TODO*/ },
+                        onClick = { onContinueClicked() },
                         shape = ComposibilityTheme.shapes.default,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -218,6 +219,9 @@ fun SignUpScreen(
 @Composable
 fun SignUpScreenPreview() {
     ComposibilityTheme {
-        SignUpScreen(onBackClicked = {})
+        SignUpScreen(
+            onBackClicked = {},
+            onContinueClicked = {}
+        )
     }
 }
