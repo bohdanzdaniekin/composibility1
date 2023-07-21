@@ -7,9 +7,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,9 +25,9 @@ fun ComposibilityTextField(
     modifier: Modifier = Modifier,
     textStyle: TextStyle = ComposibilityTheme.typography.bodyM,
     shape: Shape = ComposibilityTheme.shapes.default,
-    colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
+        focusedBorderColor = ComposibilityTheme.colors.highlightDarkest,
         unfocusedBorderColor = ComposibilityTheme.colors.neutralLightDarkest,
-        focusedBorderColor = ComposibilityTheme.colors.highlightDarkest
     ),
     placeholder: String? = null,
     placeholderTextColor: Color = ComposibilityTheme.colors.neutralDarkLightest,

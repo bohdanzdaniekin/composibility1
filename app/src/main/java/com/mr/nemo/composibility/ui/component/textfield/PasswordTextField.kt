@@ -1,13 +1,10 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.mr.nemo.composibility.ui.component.textfield
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -68,8 +65,8 @@ fun PasswordTextField(
         placeholder = placeholder,
         shape = ComposibilityTheme.shapes.default,
         singleLine = true,
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            unfocusedBorderColor = ComposibilityTheme.colors.neutralLightDarkest
+        colors = OutlinedTextFieldDefaults.colors(
+            unfocusedBorderColor = ComposibilityTheme.colors.neutralLightDarkest,
         )
     )
 }
