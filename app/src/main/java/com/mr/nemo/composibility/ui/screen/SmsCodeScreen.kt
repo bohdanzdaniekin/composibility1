@@ -1,5 +1,6 @@
 package com.mr.nemo.composibility.ui.screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -83,7 +84,9 @@ fun SmsCodeScreen() {
                     text = "Resend code",
                     style = typography.actionM.copy(
                         color = colors.highlightDarkest
-                    )
+                    ),
+                    modifier = Modifier
+                        .clickable {  }
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
