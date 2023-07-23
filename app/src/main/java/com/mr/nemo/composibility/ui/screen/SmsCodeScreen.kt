@@ -127,7 +127,7 @@ fun SmsCodeScreen(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun SmsCodeScreenPreview() {
     ComposibilityTheme {

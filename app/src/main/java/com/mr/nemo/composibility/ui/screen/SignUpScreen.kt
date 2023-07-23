@@ -10,12 +10,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -37,6 +36,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mr.nemo.composibility.R
+import com.mr.nemo.composibility.ui.component.checkbox.ComposibilityCheckbox
 import com.mr.nemo.composibility.ui.component.Titled
 import com.mr.nemo.composibility.ui.component.text.TermsAndPolicy
 import com.mr.nemo.composibility.ui.component.text.TitleText
@@ -149,15 +149,12 @@ fun SignUpScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Checkbox(
-                    checked = isTermsChecked,
+                ComposibilityCheckbox(
+                    isChecked = isTermsChecked,
                     onCheckedChange = { isChecked ->
                         isTermsChecked = isChecked
                     },
-                    colors = CheckboxDefaults.colors(
-                        checkedColor = ComposibilityTheme.colors.highlightDark,
-                        uncheckedColor = ComposibilityTheme.colors.neutralLightDarkest
-                    )
+                    modifier = Modifier.size(24.dp)
                 )
                 TermsAndPolicy(
                     onTermsAndConditionClick = {
@@ -203,7 +200,7 @@ fun SignUpScreen(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun SignUpScreenPreview() {
     ComposibilityTheme {
