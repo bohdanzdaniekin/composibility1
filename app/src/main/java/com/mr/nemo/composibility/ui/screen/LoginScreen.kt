@@ -46,7 +46,9 @@ import com.mr.nemo.composibility.ui.theme.ComposibilityTheme
 
 @Composable
 fun LoginScreen(
-    onSignUpClick: () -> Unit,
+    onSignUpClick: (String) -> Unit,
+    onForgotPasswordClick: () -> Unit,
+    onLoginClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var email by rememberSaveable {
@@ -60,8 +62,10 @@ fun LoginScreen(
         onEmailValueChange = { value -> email = value },
         password = password,
         onPasswordValueChange = { value -> password = value },
-        onSignUpClick = { onSignUpClick() },
-        modifier = modifier
+        onSignUpClick = { onSignUpClick(email) },
+        onLoginClick = { onLoginClick(email) },
+        onForgotPasswordClick = onForgotPasswordClick,
+        modifier = modifier,
     )
 }
 
@@ -71,7 +75,9 @@ fun LoginScreen(
     onEmailValueChange: (String) -> Unit,
     password: String,
     onPasswordValueChange: (String) -> Unit,
-    onSignUpClick: (Int) -> Unit,
+    onSignUpClick: () -> Unit,
+    onLoginClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
@@ -132,7 +138,7 @@ fun LoginScreen(
                 ComposibilityClickableText(
                     text = R.string.forgot_password,
                     style = ComposibilityTheme.typography.actionM,
-                    onClick = {}
+                    onClick = onForgotPasswordClick
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -140,7 +146,7 @@ fun LoginScreen(
                     colors = ButtonDefaults.buttonColors(
                         containerColor = ComposibilityTheme.colors.highlightDarkest
                     ),
-                    onClick = { /*TODO*/ },
+                    onClick = { onLoginClick() },
                     shape = ComposibilityTheme.shapes.default,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -215,6 +221,10 @@ fun LoginScreen(
 @Composable
 fun LoginScreenPreview() {
     ComposibilityTheme {
-        LoginScreen(onSignUpClick = {})
+        LoginScreen(
+            onSignUpClick = {},
+            onForgotPasswordClick = {},
+            onLoginClick = {}
+        )
     }
 }

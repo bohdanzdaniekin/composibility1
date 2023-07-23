@@ -1,6 +1,7 @@
 package com.mr.nemo.composibility.ui.screen
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,9 +18,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,12 +34,25 @@ import com.mr.nemo.composibility.ui.component.state.rememberSmsCodeState
 import com.mr.nemo.composibility.ui.component.text.TitleText
 import com.mr.nemo.composibility.ui.theme.ComposibilityTheme
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun SmsCodeScreen() {
+fun SmsCodeScreen(
+    email: String,
+    onContinueClick: () -> Unit
+) {
     val colors = ComposibilityTheme.colors
     val typography = ComposibilityTheme.typography
+
+    val keyboardManager = LocalSoftwareKeyboardController.current
+
+    val interactionSource = remember { MutableInteractionSource() }
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null
+            ) { keyboardManager?.hide() }
     ) { paddingValues ->
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -50,7 +67,7 @@ fun SmsCodeScreen() {
             ) {
                 var smsCode by rememberSmsCodeState()
                 TitleText(
-                    text = "Enter confirmation code",
+                    text = stringResource(R.string.enter_confirmation_code),
                     style = typography.heading3.copy(
                         color = colors.neutralDarkDarkest
                     )
@@ -59,7 +76,7 @@ fun SmsCodeScreen() {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "A 4-digit code was sent to\nlucasscott3@email.com",
+                    text = stringResource(R.string.digit_code_sent_to_email, email),
                     style = typography.bodyS.copy(
                         color = colors.neutralDarkLight
                     ),
@@ -81,7 +98,7 @@ fun SmsCodeScreen() {
                 verticalArrangement = Arrangement.Bottom
             ) {
                 TitleText(
-                    text = "Resend code",
+                    text = stringResource(R.string.resend_code),
                     style = typography.actionM.copy(
                         color = colors.highlightDarkest
                     ),
@@ -95,7 +112,7 @@ fun SmsCodeScreen() {
                     colors = ButtonDefaults.buttonColors(
                         containerColor = ComposibilityTheme.colors.highlightDarkest
                     ),
-                    onClick = { /*TODO*/ },
+                    onClick = onContinueClick,
                     shape = ComposibilityTheme.shapes.default,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -114,6 +131,9 @@ fun SmsCodeScreen() {
 @Composable
 fun SmsCodeScreenPreview() {
     ComposibilityTheme {
-        SmsCodeScreen()
+        SmsCodeScreen(
+            email = "testemail@gmail.com",
+            onContinueClick = {}
+        )
     }
 }

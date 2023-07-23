@@ -10,7 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
@@ -34,24 +33,20 @@ fun SmsCode(
     val typography = ComposibilityTheme.typography.bodyM.copy(
         textAlign = TextAlign.Center
     )
+
     val keyboardManager = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
     ) {
-        val secondDigitFocus = remember {
-            FocusRequester()
-        }
-        val thirdDigitFocus = remember {
-            FocusRequester()
-        }
-        val fourthDigitFocus = remember {
-            FocusRequester()
+        val (secondDigitFocus, thirdDigitFocus, fourthDigitFocus) = remember {
+            FocusRequester.createRefs()
         }
         val fieldModifier = Modifier
             .height(48.dp)
             .aspectRatio(1f)
+
         ComposibilityTextField(
             value = state.firstDigit,
             onValueChange = { value ->

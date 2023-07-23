@@ -16,7 +16,7 @@ fun ComposibilityClickableText(
     modifier: Modifier = Modifier,
     style: TextStyle = ComposibilityTheme.typography.actionM,
     color: Color = ComposibilityTheme.colors.highlightDarkest,
-    onClick: (Int) -> Unit
+    onClick: () -> Unit
 ) {
     ClickableText(
         text = buildAnnotatedString {
@@ -24,7 +24,7 @@ fun ComposibilityClickableText(
         },
         style = style.copy(color = color),
         modifier = modifier,
-        onClick = onClick
+        onClick = { onClick() }
     )
 }
 
@@ -34,7 +34,7 @@ fun ComposibilityClickableText(
     modifier: Modifier = Modifier,
     style: TextStyle = ComposibilityTheme.typography.actionM,
     color: Color = ComposibilityTheme.colors.highlightDarkest,
-    onClick: (Int) -> Unit
+    onClick: () -> Unit
 ) {
     ComposibilityClickableText(
         text = stringResource(id = text),

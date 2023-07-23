@@ -19,7 +19,6 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -44,13 +43,12 @@ import com.mr.nemo.composibility.ui.component.text.TitleText
 import com.mr.nemo.composibility.ui.component.textfield.PasswordTextField
 import com.mr.nemo.composibility.ui.component.textfield.TitledTextField
 import com.mr.nemo.composibility.ui.theme.ComposibilityTheme
-import kotlinx.coroutines.launch
 
 @Composable
 fun SignUpScreen(
     modifier: Modifier = Modifier,
     onBackClicked: () -> Unit,
-    onContinueClicked: () -> Unit
+    onContinueClicked: (String) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -129,7 +127,7 @@ fun SignUpScreen(
                 PasswordTextField(
                     password = password,
                     onPasswordValueChange = { value -> password = value },
-                    placeholder = "Create a password",
+                    placeholder = stringResource(R.string.create_a_password),
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next
                     )
@@ -138,7 +136,7 @@ fun SignUpScreen(
                 PasswordTextField(
                     password = confirmPassword,
                     onPasswordValueChange = { value -> confirmPassword = value },
-                    placeholder = "Confirm password",
+                    placeholder = stringResource(R.string.confirm_password),
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next
                     )
@@ -163,20 +161,10 @@ fun SignUpScreen(
                 )
                 TermsAndPolicy(
                     onTermsAndConditionClick = {
-                        coroutineScope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = "Terms and conditions",
-                                duration = SnackbarDuration.Short
-                            )
-                        }
+
                     },
                     onPrivacyPolicyClick = {
-                        coroutineScope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = "Privacy policy",
-                                duration = SnackbarDuration.Short
-                            )
-                        }
+
                     }
                 )
             }
@@ -200,7 +188,7 @@ fun SignUpScreen(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = ComposibilityTheme.colors.highlightDarkest
                         ),
-                        onClick = { onContinueClicked() },
+                        onClick = { onContinueClicked(email) },
                         shape = ComposibilityTheme.shapes.default,
                         modifier = Modifier
                             .fillMaxWidth()
