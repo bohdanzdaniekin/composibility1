@@ -63,11 +63,17 @@ dependencies {
     implementation 'androidx.compose.material:material-icons-core'
     implementation 'androidx.compose.material:material-icons-extended'
 
-    implementation "androidx.navigation:navigation-compose:2.6.0"
+    //implementation "androidx.navigation:navigation-compose:2.6.0"
 
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
     implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
+
+    // Voyager
+    def voyagerVersion = "1.0.0-rc05"
+    implementation "cafe.adriel.voyager:voyager-navigator:$voyagerVersion"
+    implementation "cafe.adriel.voyager:voyager-androidx:$voyagerVersion"
+
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

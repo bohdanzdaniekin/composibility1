@@ -29,31 +29,36 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cafe.adriel.voyager.androidx.AndroidScreen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.mr.nemo.composibility.R
 import com.mr.nemo.composibility.ui.component.SmsCode
 import com.mr.nemo.composibility.ui.component.text.TitleText
+import com.mr.nemo.composibility.ui.screen.login.LoginScreen
 import com.mr.nemo.composibility.ui.theme.ComposibilityTheme
 
-@Composable
-fun SmsCodeScreen(
-    email: String,
-    onContinueClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val viewModel = viewModel<SmsCodeViewModel>()
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    SmsCodeScreen(
-        email = email,
-        state = state,
-        onEvent = viewModel::onEvent,
-        onContinueClick = onContinueClick,
-        modifier = modifier
-    )
+data class SmsCodeScreen(val email: String) : AndroidScreen() {
+
+    @Composable
+    override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
+        val viewModel = viewModel<SmsCodeViewModel>()
+        val state by viewModel.state.collectAsStateWithLifecycle()
+        SmsCodeScreen(
+            email = email,
+            state = state,
+            onEvent = viewModel::onEvent,
+            onContinueClick = {
+                navigator.push(LoginScreen())
+            },
+        )
+    }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun SmsCodeScreen(
+private fun SmsCodeScreen(
     email: String,
     state: SmsCodeScreenState,
     onEvent: (SmsCodeScreenEvent) -> Unit,
@@ -155,7 +160,9 @@ fun SmsCodeScreenPreview() {
         SmsCodeScreen(
             email = "testemail@gmail.com",
             onContinueClick = {},
-            modifier = Modifier
+            modifier = Modifier,
+            state = SmsCodeScreenState(),
+            onEvent = {}
         )
     }
 }

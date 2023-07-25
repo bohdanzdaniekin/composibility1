@@ -35,6 +35,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cafe.adriel.voyager.androidx.AndroidScreen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.mr.nemo.composibility.R
 import com.mr.nemo.composibility.ui.component.checkbox.ComposibilityCheckbox
 import com.mr.nemo.composibility.ui.component.Titled
@@ -42,27 +45,31 @@ import com.mr.nemo.composibility.ui.component.text.TermsAndPolicy
 import com.mr.nemo.composibility.ui.component.text.TitleText
 import com.mr.nemo.composibility.ui.component.textfield.PasswordTextField
 import com.mr.nemo.composibility.ui.component.textfield.TitledTextField
+import com.mr.nemo.composibility.ui.screen.smscode.SmsCodeScreen
 import com.mr.nemo.composibility.ui.theme.ComposibilityTheme
 
-@Composable
-fun SignUpScreen(
-    modifier: Modifier = Modifier,
-    onBackClicked: () -> Unit,
-    onContinueClicked: (String) -> Unit
-) {
-    val viewModel = viewModel<SignUpViewModel>()
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    SignUpScreen(
-        state = state,
-        onEvent = viewModel::onEvent,
-        onBackClicked = onBackClicked,
-        onContinueClicked = { onContinueClicked(state.email) },
-        modifier = modifier
-    )
+class SignUpScreen : AndroidScreen() {
+
+    @Composable
+    override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
+        val viewModel = viewModel<SignUpViewModel>()
+        val state by viewModel.state.collectAsStateWithLifecycle()
+        SignUpScreen(
+            state = state,
+            onEvent = viewModel::onEvent,
+            onBackClicked = {
+                navigator.pop()
+            },
+            onContinueClicked = {
+                navigator.push(SmsCodeScreen(state.email))
+            },
+        )
+    }
 }
 
 @Composable
-fun SignUpScreen(
+private fun SignUpScreen(
     state: SignUpScreenState,
     onEvent: (SignUpScreenEvent) -> Unit,
     onBackClicked: () -> Unit,
@@ -214,7 +221,9 @@ fun SignUpScreenPreview() {
     ComposibilityTheme {
         SignUpScreen(
             onBackClicked = {},
-            onContinueClicked = {}
+            onContinueClicked = {},
+            state = SignUpScreenState(),
+            onEvent = {}
         )
     }
 }
