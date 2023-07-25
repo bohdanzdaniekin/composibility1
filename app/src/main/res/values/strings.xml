@@ -17,4 +17,9 @@
     <string name="digit_code_sent_to_email">A 4-digit code was sent to\n%s</string>
     <string name="terms_and_conditions">Terms and Conditions</string>
     <string name="privacy_policy">Privacy Policy</string>
+    <string name="name">Name</string>
+    <string name="placeholder_name">Enter your wonderful name</string>
+    <string name="placehlder_email">name@email.com</string>
+    <string name="sign_up">Sign up</string>
+    <string name="create_an_account_to_get_started">Create an account to get started</string>
 </resources>

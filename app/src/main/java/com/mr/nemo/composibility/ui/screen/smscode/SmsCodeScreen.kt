@@ -1,4 +1,4 @@
-package com.mr.nemo.composibility.ui.screen
+package com.mr.nemo.composibility.ui.screen.smscode
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -19,7 +19,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -28,17 +27,38 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mr.nemo.composibility.R
 import com.mr.nemo.composibility.ui.component.SmsCode
-import com.mr.nemo.composibility.ui.component.state.rememberSmsCodeState
 import com.mr.nemo.composibility.ui.component.text.TitleText
 import com.mr.nemo.composibility.ui.theme.ComposibilityTheme
+
+@Composable
+fun SmsCodeScreen(
+    email: String,
+    onContinueClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val viewModel = viewModel<SmsCodeViewModel>()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    SmsCodeScreen(
+        email = email,
+        state = state,
+        onEvent = viewModel::onEvent,
+        onContinueClick = onContinueClick,
+        modifier = modifier
+    )
+}
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SmsCodeScreen(
     email: String,
-    onContinueClick: () -> Unit
+    state: SmsCodeScreenState,
+    onEvent: (SmsCodeScreenEvent) -> Unit,
+    onContinueClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val colors = ComposibilityTheme.colors
     val typography = ComposibilityTheme.typography
@@ -47,7 +67,7 @@ fun SmsCodeScreen(
 
     val interactionSource = remember { MutableInteractionSource() }
     Scaffold(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .clickable(
                 interactionSource = interactionSource,
@@ -65,7 +85,6 @@ fun SmsCodeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                var smsCode by rememberSmsCodeState()
                 TitleText(
                     text = stringResource(R.string.enter_confirmation_code),
                     style = typography.heading3.copy(
@@ -86,8 +105,10 @@ fun SmsCodeScreen(
                 Spacer(modifier = Modifier.height(40.dp))
 
                 SmsCode(
-                    state = smsCode,
-                    onStateChanged = { state -> smsCode = state }
+                    state = state.smsCode,
+                    onStateChanged = { state ->
+                        onEvent(SmsCodeScreenEvent.OnSmsCodeUpdated(state))
+                    }
                 )
             }
             Column(
@@ -103,7 +124,7 @@ fun SmsCodeScreen(
                         color = colors.highlightDarkest
                     ),
                     modifier = Modifier
-                        .clickable {  }
+                        .clickable { }
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -133,7 +154,8 @@ fun SmsCodeScreenPreview() {
     ComposibilityTheme {
         SmsCodeScreen(
             email = "testemail@gmail.com",
-            onContinueClick = {}
+            onContinueClick = {},
+            modifier = Modifier
         )
     }
 }

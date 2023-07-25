@@ -1,4 +1,4 @@
-package com.mr.nemo.composibility.ui.screen
+package com.mr.nemo.composibility.ui.screen.signup
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,10 +24,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,6 +33,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mr.nemo.composibility.R
 import com.mr.nemo.composibility.ui.component.checkbox.ComposibilityCheckbox
 import com.mr.nemo.composibility.ui.component.Titled
@@ -50,6 +50,25 @@ fun SignUpScreen(
     onBackClicked: () -> Unit,
     onContinueClicked: (String) -> Unit
 ) {
+    val viewModel = viewModel<SignUpViewModel>()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    SignUpScreen(
+        state = state,
+        onEvent = viewModel::onEvent,
+        onBackClicked = onBackClicked,
+        onContinueClicked = { onContinueClicked(state.email) },
+        modifier = modifier
+    )
+}
+
+@Composable
+fun SignUpScreen(
+    state: SignUpScreenState,
+    onEvent: (SignUpScreenEvent) -> Unit,
+    onBackClicked: () -> Unit,
+    onContinueClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
@@ -59,21 +78,6 @@ fun SignUpScreen(
         },
         containerColor = ComposibilityTheme.colors.neutralLightLightest
     ) { paddingValues ->
-        var name by remember {
-            mutableStateOf("")
-        }
-        var email by remember {
-            mutableStateOf("")
-        }
-        var password by remember {
-            mutableStateOf("")
-        }
-        var confirmPassword by remember {
-            mutableStateOf("")
-        }
-        var isTermsChecked by remember {
-            mutableStateOf(false)
-        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -82,23 +86,23 @@ fun SignUpScreen(
         ) {
 
             TitleText(
-                text = "Sign up",
+                text = stringResource(R.string.sign_up),
                 style = ComposibilityTheme.typography.heading3
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Create an account to get started",
+                text = stringResource(R.string.create_an_account_to_get_started),
                 style = ComposibilityTheme.typography.bodyS,
                 color = ComposibilityTheme.colors.neutralDarkLight
             )
 
             Spacer(modifier = Modifier.height(24.dp))
             TitledTextField(
-                title = "Name",
-                value = name,
-                placeholder = "Enter your wonderful name",
+                title = stringResource(R.string.name),
+                value = state.name,
+                placeholder = stringResource(R.string.placeholder_name),
                 onValueChange = { value ->
-                    name = value
+                    onEvent(SignUpScreenEvent.OnNameUpdate(value))
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
@@ -108,11 +112,11 @@ fun SignUpScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
             TitledTextField(
-                title = "Email address",
-                value = email,
-                placeholder = "name@email.com",
+                title = stringResource(id = R.string.email_address),
+                value = state.email,
+                placeholder = stringResource(R.string.placehlder_email),
                 onValueChange = { value ->
-                    email = value
+                    onEvent(SignUpScreenEvent.OnEmailUpdate(value))
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
@@ -125,8 +129,10 @@ fun SignUpScreen(
                 title = "Password"
             ) {
                 PasswordTextField(
-                    password = password,
-                    onPasswordValueChange = { value -> password = value },
+                    password = state.password,
+                    onPasswordValueChange = { value ->
+                        onEvent(SignUpScreenEvent.OnPasswordUpdate(value))
+                    },
                     placeholder = stringResource(R.string.create_a_password),
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next
@@ -134,11 +140,13 @@ fun SignUpScreen(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 PasswordTextField(
-                    password = confirmPassword,
-                    onPasswordValueChange = { value -> confirmPassword = value },
+                    password = state.confirmPassword,
+                    onPasswordValueChange = { value ->
+                        onEvent(SignUpScreenEvent.OnConfirmPasswordUpdate(value))
+                    },
                     placeholder = stringResource(R.string.confirm_password),
                     keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Next
+                        imeAction = ImeAction.Done
                     )
                 )
             }
@@ -150,9 +158,9 @@ fun SignUpScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 ComposibilityCheckbox(
-                    isChecked = isTermsChecked,
+                    isChecked = state.isTermsChecked,
                     onCheckedChange = { isChecked ->
-                        isTermsChecked = isChecked
+                        onEvent(SignUpScreenEvent.OnTermsChecked(isChecked))
                     },
                     modifier = Modifier.size(24.dp)
                 )
@@ -185,7 +193,7 @@ fun SignUpScreen(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = ComposibilityTheme.colors.highlightDarkest
                         ),
-                        onClick = { onContinueClicked(email) },
+                        onClick = onContinueClicked,
                         shape = ComposibilityTheme.shapes.default,
                         modifier = Modifier
                             .fillMaxWidth()

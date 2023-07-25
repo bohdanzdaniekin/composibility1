@@ -4,25 +4,31 @@ sealed interface Screen {
 
     val route: String
 
-    object Login : Screen {
+    object AuthGraph : Screen {
 
         override val route: String
-            get() = "login"
-    }
+            get() = Login.route
 
-    object SignUp : Screen {
+        object Login : Screen {
 
-        override val route: String
-            get() = "sign_up"
-    }
+            override val route: String
+                get() = "login"
+        }
 
-    object SmsCode : Screen {
+        object SignUp : Screen {
 
-        const val EMAIL = "email"
+            override val route: String
+                get() = "sign_up"
+        }
 
-        override val route: String
-            get() = "sms_code/{email}"
+        object SmsCode : Screen {
 
-        fun route(email: String) = route.replaceFirst("{email}", email)
+            const val ARGUMENT_EMAIL = "email"
+
+            override val route: String
+                get() = "sms_code/{$ARGUMENT_EMAIL}"
+
+            fun route(email: String) = route.replaceFirst("{$ARGUMENT_EMAIL}", email)
+        }
     }
 }

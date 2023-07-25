@@ -1,4 +1,4 @@
-package com.mr.nemo.composibility.ui.screen
+package com.mr.nemo.composibility.ui.screen.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -22,11 +22,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -36,6 +33,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mr.nemo.composibility.R
 import com.mr.nemo.composibility.ui.component.ShapeableIconButton
 import com.mr.nemo.composibility.ui.component.text.ComposibilityClickableText
@@ -51,19 +50,13 @@ fun LoginScreen(
     onLoginClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var email by rememberSaveable {
-        mutableStateOf("")
-    }
-    var password by rememberSaveable {
-        mutableStateOf("")
-    }
+    val viewModel = viewModel<LoginViewModel>()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     LoginScreen(
-        email = email,
-        onEmailValueChange = { value -> email = value },
-        password = password,
-        onPasswordValueChange = { value -> password = value },
-        onSignUpClick = { onSignUpClick(email) },
-        onLoginClick = { onLoginClick(email) },
+        state = state,
+        onEvent = viewModel::onEvent,
+        onSignUpClick = { onSignUpClick(state.email) },
+        onLoginClick = { onLoginClick(state.email) },
         onForgotPasswordClick = onForgotPasswordClick,
         modifier = modifier,
     )
@@ -71,10 +64,8 @@ fun LoginScreen(
 
 @Composable
 fun LoginScreen(
-    email: String,
-    onEmailValueChange: (String) -> Unit,
-    password: String,
-    onPasswordValueChange: (String) -> Unit,
+    state: LoginScreenState,
+    onEvent: (LoginScreenEvent) -> Unit,
     onSignUpClick: () -> Unit,
     onLoginClick: () -> Unit,
     onForgotPasswordClick: () -> Unit,
@@ -117,8 +108,10 @@ fun LoginScreen(
 
                 Spacer(Modifier.height(24.dp))
                 ComposibilityTextField(
-                    value = email,
-                    onValueChange = onEmailValueChange,
+                    value = state.email,
+                    onValueChange = { value ->
+                        onEvent(LoginScreenEvent.OnEmailUpdate(value))
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     textStyle = ComposibilityTheme.typography.bodyM,
                     placeholder = stringResource(R.string.email_address),
@@ -130,8 +123,10 @@ fun LoginScreen(
 
                 Spacer(Modifier.height(16.dp))
                 PasswordTextField(
-                    password = password,
-                    onPasswordValueChange = onPasswordValueChange
+                    password = state.password,
+                    onPasswordValueChange = { value ->
+                        onEvent(LoginScreenEvent.OnPasswordUpdate(value))
+                    }
                 )
 
                 Spacer(Modifier.height(16.dp))
