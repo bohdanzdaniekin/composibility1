@@ -36,8 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mr.nemo.composibility.R
-import com.mr.nemo.composibility.ui.component.checkbox.ComposibilityCheckbox
 import com.mr.nemo.composibility.ui.component.Titled
+import com.mr.nemo.composibility.ui.component.checkbox.ComposibilityCheckbox
 import com.mr.nemo.composibility.ui.component.text.TermsAndPolicy
 import com.mr.nemo.composibility.ui.component.text.TitleText
 import com.mr.nemo.composibility.ui.component.textfield.PasswordTextField
