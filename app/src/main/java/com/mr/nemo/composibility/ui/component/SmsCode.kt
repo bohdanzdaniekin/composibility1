@@ -10,17 +10,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.text.isDigitsOnly
 import com.mr.nemo.composibility.ui.component.state.SmsCodeState
 import com.mr.nemo.composibility.ui.component.textfield.ComposibilityTextField
+import com.mr.nemo.composibility.ui.ext.onBackPressed
 import com.mr.nemo.composibility.ui.theme.ComposibilityTheme
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -40,7 +50,7 @@ fun SmsCode(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
     ) {
-        val (secondDigitFocus, thirdDigitFocus, fourthDigitFocus) = remember {
+        val (firstDigitFocus, secondDigitFocus, thirdDigitFocus, fourthDigitFocus) = remember {
             FocusRequester.createRefs()
         }
         val fieldModifier = Modifier
@@ -50,12 +60,22 @@ fun SmsCode(
         ComposibilityTextField(
             value = state.firstDigit,
             onValueChange = { value ->
-                if (value.length <= 1) {
-                    onStateChanged(state.copy(firstDigit = value))
-                    secondDigitFocus.requestFocus()
+                handleValueChange(
+                    previousFocus = null,
+                    nextFocus = secondDigitFocus,
+                    currentFocus = firstDigitFocus,
+                    value = value,
+                    keyboardManager
+                ) { changed ->
+                    onStateChanged(state.copy(firstDigit = changed))
                 }
             },
-            modifier = fieldModifier,
+            modifier = fieldModifier
+                .focusProperties {
+                    start = FocusRequester.Cancel
+                    previous = FocusRequester.Cancel
+                }
+                .focusRequester(firstDigitFocus),
             textStyle = typography,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
@@ -65,12 +85,21 @@ fun SmsCode(
         ComposibilityTextField(
             value = state.secondDigit,
             onValueChange = { value ->
-                if (value.length <= 1) {
-                    onStateChanged(state.copy(secondDigit = value))
-                    thirdDigitFocus.requestFocus()
+                handleValueChange(
+                    previousFocus = firstDigitFocus,
+                    nextFocus = thirdDigitFocus,
+                    currentFocus = secondDigitFocus,
+                    value = value,
+                    keyboardManager
+                ) { changed ->
+                    onStateChanged(state.copy(secondDigit = changed))
                 }
             },
             modifier = fieldModifier
+                .focusProperties {
+
+                    previous = firstDigitFocus
+                }
                 .focusRequester(secondDigitFocus),
             textStyle = typography,
             keyboardOptions = KeyboardOptions(
@@ -81,12 +110,20 @@ fun SmsCode(
         ComposibilityTextField(
             value = state.thirdDigit,
             onValueChange = { value ->
-                if (value.length <= 1) {
-                    onStateChanged(state.copy(thirdDigit = value))
-                    fourthDigitFocus.requestFocus()
+                handleValueChange(
+                    previousFocus = secondDigitFocus,
+                    nextFocus = fourthDigitFocus,
+                    currentFocus = thirdDigitFocus,
+                    value = value,
+                    keyboardManager
+                ) { changed ->
+                    onStateChanged(state.copy(thirdDigit = changed))
                 }
             },
             modifier = fieldModifier
+                .focusProperties {
+                    previous = secondDigitFocus
+                }
                 .focusRequester(thirdDigitFocus),
             textStyle = typography,
             keyboardOptions = KeyboardOptions(
@@ -97,13 +134,21 @@ fun SmsCode(
         ComposibilityTextField(
             value = state.fourthDigit,
             onValueChange = { value ->
-                if (value.length <= 1) {
-                    onStateChanged(state.copy(fourthDigit = value))
-                    keyboardManager?.hide()
-                    focusManager.clearFocus()
+                handleValueChange(
+                    previousFocus = thirdDigitFocus,
+                    nextFocus = null,
+                    currentFocus = fourthDigitFocus,
+                    value = value,
+                    keyboardManager
+                ) { changed ->
+                    onStateChanged(state.copy(fourthDigit = changed))
                 }
             },
             modifier = fieldModifier
+                .focusProperties {
+                    previous = thirdDigitFocus
+                    next = FocusRequester.Cancel
+                }
                 .focusRequester(fourthDigitFocus),
             textStyle = typography,
             keyboardOptions = KeyboardOptions(
@@ -111,6 +156,32 @@ fun SmsCode(
                 imeAction = ImeAction.Done
             )
         )
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+private fun handleValueChange(
+    previousFocus: FocusRequester? = null,
+    nextFocus: FocusRequester? = null,
+    currentFocus: FocusRequester,
+    value: String,
+    keyboardManager: SoftwareKeyboardController?,
+    onValueChanged: (String) -> Unit
+) {
+    if (value.isDigitsOnly()) {
+        if (value.length > 1) {
+            onValueChanged(value.last().toString())
+            nextFocus?.requestFocus() ?: keyboardManager?.hide()
+            return
+        }
+        if (currentFocus.freeFocus()) {
+            onValueChanged(value)
+            if (value.isBlank() && previousFocus != null) {
+                previousFocus.requestFocus()
+            } else if (value.isNotBlank()) {
+                nextFocus?.requestFocus() ?: keyboardManager?.hide()
+            }
+        }
     }
 }
 

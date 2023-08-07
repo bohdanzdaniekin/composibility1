@@ -221,7 +221,7 @@ private fun LoginScreen(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun LoginScreenPreview() {
+private fun LoginScreenPreview() {
     ComposibilityTheme {
         LoginScreen(
             onSignUpClick = {},

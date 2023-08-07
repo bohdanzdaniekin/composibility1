@@ -8,6 +8,7 @@
     <string name="not_a_member">"Not a member? "</string>
     <string name="register_now">Register now</string>
     <string name="button_continue">Continue</string>
+    <string name="button_next">Next</string>
     <string name="or_continue_with">Or continue with</string>
     <string name="create_a_password">Create a password</string>
     <string name="confirm_password">Confirm password</string>
