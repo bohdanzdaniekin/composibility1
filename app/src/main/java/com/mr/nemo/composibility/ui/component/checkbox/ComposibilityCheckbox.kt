@@ -1,29 +1,30 @@
 package com.mr.nemo.composibility.ui.component.checkbox
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.IconToggleButtonColors
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.OutlinedIconToggleButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.mr.nemo.composibility.R
 import com.mr.nemo.composibility.ui.theme.ComposibilityTheme
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ComposibilityCheckbox(
     isChecked: Boolean,
@@ -55,7 +56,7 @@ fun ComposibilityCheckbox(
             exit = fadeOut()
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_check),
+                imageVector = Icons.Default.Check,
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxSize()

@@ -35,35 +35,42 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cafe.adriel.voyager.androidx.AndroidScreen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.mr.nemo.composibility.R
 import com.mr.nemo.composibility.ui.component.ShapeableIconButton
 import com.mr.nemo.composibility.ui.component.text.ComposibilityClickableText
 import com.mr.nemo.composibility.ui.component.text.TitleText
 import com.mr.nemo.composibility.ui.component.textfield.ComposibilityTextField
 import com.mr.nemo.composibility.ui.component.textfield.PasswordTextField
+import com.mr.nemo.composibility.ui.screen.signup.SignUpScreen
+import com.mr.nemo.composibility.ui.screen.smscode.SmsCodeScreen
 import com.mr.nemo.composibility.ui.theme.ComposibilityTheme
 
-@Composable
-fun LoginScreen(
-    onSignUpClick: (String) -> Unit,
-    onForgotPasswordClick: () -> Unit,
-    onLoginClick: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val viewModel = viewModel<LoginViewModel>()
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    LoginScreen(
-        state = state,
-        onEvent = viewModel::onEvent,
-        onSignUpClick = { onSignUpClick(state.email) },
-        onLoginClick = { onLoginClick(state.email) },
-        onForgotPasswordClick = onForgotPasswordClick,
-        modifier = modifier,
-    )
+class LoginScreen : AndroidScreen() {
+
+    @Composable
+    override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
+        val viewModel = viewModel<LoginViewModel>()
+        val state by viewModel.state.collectAsStateWithLifecycle()
+        LoginScreen(
+            state = state,
+            onEvent = viewModel::onEvent,
+            onSignUpClick = {
+                navigator.push(SignUpScreen())
+            },
+            onLoginClick = {
+                navigator.push(SmsCodeScreen(state.email))
+            },
+            onForgotPasswordClick = { }
+        )
+    }
 }
 
 @Composable
-fun LoginScreen(
+private fun LoginScreen(
     state: LoginScreenState,
     onEvent: (LoginScreenEvent) -> Unit,
     onSignUpClick: () -> Unit,
@@ -214,12 +221,14 @@ fun LoginScreen(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun LoginScreenPreview() {
+private fun LoginScreenPreview() {
     ComposibilityTheme {
         LoginScreen(
             onSignUpClick = {},
             onForgotPasswordClick = {},
-            onLoginClick = {}
+            onLoginClick = {},
+            state = LoginScreenState(),
+            onEvent = {}
         )
     }
 }

@@ -3,10 +3,8 @@ package com.mr.nemo.composibility.ui.screen.smscode
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -29,31 +28,36 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cafe.adriel.voyager.androidx.AndroidScreen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.mr.nemo.composibility.R
 import com.mr.nemo.composibility.ui.component.SmsCode
 import com.mr.nemo.composibility.ui.component.text.TitleText
+import com.mr.nemo.composibility.ui.screen.onboarding.OnboardingScreen
 import com.mr.nemo.composibility.ui.theme.ComposibilityTheme
 
-@Composable
-fun SmsCodeScreen(
-    email: String,
-    onContinueClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val viewModel = viewModel<SmsCodeViewModel>()
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    SmsCodeScreen(
-        email = email,
-        state = state,
-        onEvent = viewModel::onEvent,
-        onContinueClick = onContinueClick,
-        modifier = modifier
-    )
+data class SmsCodeScreen(val email: String) : AndroidScreen() {
+
+    @Composable
+    override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
+        val viewModel = viewModel<SmsCodeViewModel>()
+        val state by viewModel.state.collectAsStateWithLifecycle()
+        SmsCodeScreen(
+            email = email,
+            state = state,
+            onEvent = viewModel::onEvent,
+            onContinueClick = {
+                navigator.push(OnboardingScreen())
+            },
+        )
+    }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun SmsCodeScreen(
+private fun SmsCodeScreen(
     email: String,
     state: SmsCodeScreenState,
     onEvent: (SmsCodeScreenEvent) -> Unit,
@@ -74,12 +78,15 @@ fun SmsCodeScreen(
                 indication = null
             ) { keyboardManager?.hide() }
     ) { paddingValues ->
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.aligned(Alignment.CenterVertically)
         ) {
+
             Column(
                 modifier = Modifier
+                    .weight(1f)
                     .padding(paddingValues)
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -113,7 +120,6 @@ fun SmsCodeScreen(
             }
             Column(
                 modifier = Modifier
-                    .fillMaxHeight()
                     .padding(horizontal = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Bottom
@@ -149,13 +155,19 @@ fun SmsCodeScreen(
 }
 
 @Preview(showBackground = true, showSystemUi = true)
+@Preview(
+    showBackground = true,
+    device = "spec:id=reference_phone,shape=Normal,width=760,height=348,unit=dp,dpi=420"
+)
 @Composable
 fun SmsCodeScreenPreview() {
     ComposibilityTheme {
         SmsCodeScreen(
             email = "testemail@gmail.com",
             onContinueClick = {},
-            modifier = Modifier
+            modifier = Modifier,
+            state = SmsCodeScreenState(),
+            onEvent = {}
         )
     }
 }
