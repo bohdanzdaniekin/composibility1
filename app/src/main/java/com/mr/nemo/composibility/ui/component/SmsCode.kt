@@ -10,16 +10,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEventType
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onKeyEvent
-import androidx.compose.ui.input.key.type
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
@@ -30,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import com.mr.nemo.composibility.ui.component.state.SmsCodeState
 import com.mr.nemo.composibility.ui.component.textfield.ComposibilityTextField
-import com.mr.nemo.composibility.ui.ext.onBackPressed
 import com.mr.nemo.composibility.ui.theme.ComposibilityTheme
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -45,7 +37,6 @@ fun SmsCode(
     )
 
     val keyboardManager = LocalSoftwareKeyboardController.current
-    val focusManager = LocalFocusManager.current
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)

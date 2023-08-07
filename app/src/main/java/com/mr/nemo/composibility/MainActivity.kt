@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import cafe.adriel.voyager.navigator.Navigator
+import com.mr.nemo.composibility.ui.screen.interests.InterestsScreen
 import com.mr.nemo.composibility.ui.screen.login.LoginScreen
 import com.mr.nemo.composibility.ui.screen.onboarding.OnboardingScreen
 import com.mr.nemo.composibility.ui.theme.ComposibilityTheme
@@ -19,6 +20,7 @@ class MainActivity : ComponentActivity() {
                     onBackPressed = { screen ->
                         when (screen) {
                             is OnboardingScreen -> false
+                            is InterestsScreen -> false
                             else -> true
                         }
                     }

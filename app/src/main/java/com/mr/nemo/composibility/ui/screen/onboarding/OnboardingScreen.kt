@@ -25,6 +25,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import coil.compose.rememberAsyncImagePainter
 import com.mr.nemo.composibility.ui.ext.offsetForPage
+import com.mr.nemo.composibility.ui.screen.interests.InterestsScreen
 import com.mr.nemo.composibility.ui.screen.login.LoginScreen
 import com.mr.nemo.composibility.ui.theme.ComposibilityTheme
 import kotlinx.coroutines.flow.collectLatest
@@ -44,7 +45,7 @@ class OnboardingScreen : AndroidScreen() {
             viewModel.effect.flowWithLifecycle(lifecycle).collectLatest { effect ->
                 when (effect) {
                     is OnboardingEffect.NavigateForward -> {
-                        navigator
+                        navigator.push(InterestsScreen())
                     }
                     is OnboardingEffect.NavigateBackward -> {
                         navigator.popUntil { screen -> screen is LoginScreen }
@@ -85,9 +86,9 @@ class OnboardingScreen : AndroidScreen() {
 @Composable
 private fun OnboardingScreen(
     state: OnboardingScreenState,
-    pagerState: PagerState = rememberPagerState(),
     onEvent: (OnboardingScreenEvent) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    pagerState: PagerState = rememberPagerState()
 ) {
     BackHandler {
         onEvent(OnboardingScreenEvent.OnScrollBackward)
