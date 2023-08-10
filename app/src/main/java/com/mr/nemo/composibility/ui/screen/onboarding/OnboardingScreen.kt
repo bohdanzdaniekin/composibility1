@@ -54,7 +54,9 @@ class OnboardingScreen : AndroidScreen() {
             }
         }
 
-        val pagerState = rememberPagerState()
+        val pagerState = rememberPagerState {
+            state.pages.size
+        }
         LaunchedEffect(lifecycle) {
             snapshotFlow { state.currentPage }
                 .flowWithLifecycle(lifecycle)
@@ -88,7 +90,9 @@ private fun OnboardingScreen(
     state: OnboardingScreenState,
     onEvent: (OnboardingScreenEvent) -> Unit,
     modifier: Modifier = Modifier,
-    pagerState: PagerState = rememberPagerState()
+    pagerState: PagerState = rememberPagerState {
+        state.pages.size
+    }
 ) {
     BackHandler {
         onEvent(OnboardingScreenEvent.OnScrollBackward)
@@ -97,7 +101,6 @@ private fun OnboardingScreen(
         modifier = modifier.fillMaxSize()
     ) { paddingValues ->
         HorizontalPager(
-            pageCount = state.pages.size,
             modifier = Modifier,
             state = pagerState,
             contentPadding = paddingValues
